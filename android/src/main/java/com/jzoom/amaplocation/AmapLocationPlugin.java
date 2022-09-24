@@ -221,10 +221,19 @@ public class AmapLocationPlugin implements MethodCallHandler, AMapLocationListen
 
     private boolean startup(Map arguments) {
         synchronized (this){
+            // 目前强制同意隐私协议，
+            // 后续可根据最新官方代码编写接口，
+            // 使得Flutter端可配置
+            AMapLocationClient.updatePrivacyShow(getApplicationContext(),true,true);
+            AMapLocationClient.updatePrivacyAgree(getApplicationContext(),true);
 
             if(locationClient==null){
                 //初始化client
-                locationClient = new AMapLocationClient(getApplicationContext());
+                try{
+                    locationClient = new AMapLocationClient(getApplicationContext());
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 //设置定位参数
                 AMapLocationClientOption option = new AMapLocationClientOption();
                 parseOptions(option,arguments);
